@@ -1,6 +1,10 @@
 import pygame
 
 surf = pygame.display.set_mode((1000, 500))
+pygame.display.set_caption("Sorting Algorithm Visualizer")
+
+icon = pygame.image.load("icon.png")
+pygame.display.set_icon(icon)
 
 x = 0
 y = 0
