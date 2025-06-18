@@ -1,3 +1,4 @@
+import random
 import time
 import pygame
 
@@ -125,13 +126,90 @@ class SortingVisualizer:
                 self.wait()
 
     def quick_sort(self):
-        pass
+        self.quick_sort_rec(0, self.n)
+        self.red_ind = self.n - 2
+        self.green_ind = self.n - 1
+
+    def quick_sort_rec(self, left, right):
+        leny = right - left
+        if leny < 2:
+            return
+        mid_ind = random.randrange(left, right)
+        pivot = self.arr[mid_ind]
+        self.red_ind = mid_ind
+        smaller_than = []
+        greater_than = []
+        smaller_than_count = 0
+        for i in range(left, right):
+            if i == mid_ind:
+                continue
+            item = self.arr[i]
+            self.green_ind = i
+            if item < pivot:
+                smaller_than.append(item)
+                smaller_than_count += 1
+            else:
+                greater_than.append(item)
+            self.wait()
+        self.overwrite_range(left, smaller_than_count + left, smaller_than)
+        self.red_ind = smaller_than_count + left
+        self.overwrite_range(smaller_than_count + left, smaller_than_count + left + 1, [pivot])
+        self.overwrite_range(smaller_than_count + left + 1, right, greater_than)
+        self.quick_sort_rec(left, smaller_than_count + left)
+        self.quick_sort_rec(left + smaller_than_count + 1, right)
+
+    def isolate_digit(self, num, pos_from_right_0_indexed):
+        return num // (10 ** pos_from_right_0_indexed) % 10
 
     def radix_sort(self):
-        pass
+        digits_required = len(str(self.maximum))
+        for digit_pos in range(digits_required):
+            self.overwrite_range(0, self.n, self.counting_sort_internal(self.arr, digit_pos))
+        self.green_ind = self.n - 1
+        self.red_ind = self.n - 2
 
     def counting_sort(self):
-        pass
+        freqs = [0 for _ in range(self.maximum + 1)]
+        for i in range(self.n):
+            freqs[self.arr[i]] += 1
+            self.green_ind = i
+            self.wait()
+        for i in range(1, self.maximum + 1):
+            freqs[i] += freqs[i - 1]
+            self.wait()
+        for i in range(self.maximum - 1, -1, -1):
+            freqs[i + 1] = freqs[i]
+            freqs[i] = 0
+            self.wait()
+        result = [0 for _ in range(self.n)]
+        for i in range(self.n):
+            result[freqs[self.arr[i]]] = self.arr[i]
+            freqs[self.arr[i]] += 1
+            self.green_ind = i
+            self.wait()
+        self.overwrite_range(0, self.n, result)
+        self.red_ind = self.n - 2
+
+    def counting_sort_internal(self, array, digit_to_use):
+        leny = len(array)
+        maxy = 9
+        freqs = [0 for _ in range(maxy + 1)]
+        for i in range(leny):
+            freqs[self.isolate_digit(array[i], digit_to_use)] += 1
+            self.wait()
+        for i in range(1, maxy + 1):
+            freqs[i] += freqs[i - 1]
+            self.wait()
+        for i in range(maxy - 1, -1, -1):
+            freqs[i + 1] = freqs[i]
+            freqs[i] = 0
+            self.wait()
+        result = [0 for _ in range(leny)]
+        for i in range(leny):
+            result[freqs[self.isolate_digit(array[i], digit_to_use)]] = array[i]
+            freqs[self.isolate_digit(array[i], digit_to_use)] += 1
+            self.wait()
+        return result
 
     def heap_sort(self):
         pass

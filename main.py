@@ -72,6 +72,13 @@ while True:
             for thread in threads:
                 thread.join(3)
             quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                for graph in graphs:
+                    graph.kill_process()
+                for thread in threads:
+                    thread.join(3)
+                quit()
 
     pygame.draw.rect(surf, (0,0,0), (0, 0, 1000, 500))  # Draw background
     for graph in graphs:
