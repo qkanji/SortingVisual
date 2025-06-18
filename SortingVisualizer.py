@@ -39,9 +39,10 @@ class SortingVisualizer:
         time.sleep(self.delay)
 
     def bubble_sort(self):
+        j = self.n - 1
         while self.active:
             sorte = True
-            for i in range(self.n - 1):
+            for i in range(j):
                 self.red_ind = i
                 self.green_ind = i + 1
                 if self.arr[i] > self.arr[i+1]:
@@ -50,7 +51,9 @@ class SortingVisualizer:
                 self.wait()
             if sorte:
                 self.red_ind = self.n - 2
+                self.green_ind = self.n - 1
                 return
+            j -= 1
 
     def selection_sort(self):
         for i in range(self.n - 1):
