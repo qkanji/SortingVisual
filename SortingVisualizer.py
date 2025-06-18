@@ -133,5 +133,5 @@ class SortingVisualizer:
     def heap_sort(self):
         pass
 
-    def bogo_sort(self):
-        pass
+    # def bogo_sort(self):
+    #     pass
