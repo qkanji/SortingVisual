@@ -2,10 +2,17 @@ import random
 import time
 from threading import Thread
 import pygame
+
+pygame.init()
 from SortingVisualizer import SortingVisualizer
 
-screen_w = 1200
-screen_h = 600
+font = pygame.sysfont.Font(size=22)
+text = font.render("By: Qayim", True, (255, 165, 0), (0, 0, 0))
+text_rect = text.get_rect()
+text_rect.center = (1555, 785)
+
+screen_w = 1600
+screen_h = 800
 
 graphs_wide = 4
 graphs_high = 2
@@ -13,7 +20,7 @@ graphs_high = 2
 padding = 10
 
 graph_width = screen_w / graphs_wide - 2 * padding
-graphs_height = screen_h / graphs_high - 2 * padding
+graphs_height = screen_h / graphs_high - 2 * padding - 80
 
 surf = pygame.display.set_mode((screen_w, screen_h))
 pygame.display.set_caption("Sorting Algorithm Visualizer")
@@ -81,6 +88,7 @@ while True:
                 quit()
 
     pygame.draw.rect(surf, (0,0,0), (0, 0, 1000, 500))  # Draw background
+    surf.blit(text, text_rect)
     for graph in graphs:
         graph.display()
     pygame.display.flip()

@@ -1,7 +1,10 @@
+import math
 import random
 import time
 import pygame
 import heapq
+
+font = pygame.sysfont.Font(size=60)
 
 class SortingVisualizer:
     def __init__(self, surf, origin_x, origin_y, width, height, array, maximum, number_of_items, delay=0.02):
@@ -19,14 +22,34 @@ class SortingVisualizer:
         self.green_ind = None
         self.red_ind = None
         self.active = True
-        self.display()
+        self.text = None
+        self.text_rect = None
+        self.name = ""
 
     def kill_process(self):
         self.active = False
 
-    def display(self):
+    def init_textbox(self, name):
+        name += " Sort"
+        self.name = name
+        self.text = font.render(name, True, (255, 255, 255), (0, 0, 0))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.center = (self.w // 2 + self.x, self.y + self.h + 30)
+
+    def finished(self):
+        self.text = font.render(self.name, True, (0, 255, 0), (0, 0, 0))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.center = (self.w // 2 + self.x, self.y + self.h + 30)
+
+    def display(self): # Draw in centered, 40 under
         pygame.draw.rect(self.surf, (0, 0, 0), (self.x, self.y, self.w, self.h))
+        if self.text is not None:
+            self.surf.blit(self.text, self.text_rect)
         for i in range(self.n):
+            try:
+                self.arr[i]
+            except IndexError:
+                continue
             col = (255, 255, 255)
             if self.green_ind == i:
                 col = (0, 255, 0)
@@ -41,6 +64,7 @@ class SortingVisualizer:
         time.sleep(self.delay)
 
     def bubble_sort(self):
+        self.init_textbox("Bubble")
         j = self.n - 1
         while self.active:
             sorte = True
@@ -52,12 +76,14 @@ class SortingVisualizer:
                     sorte = False
                 self.wait()
             if sorte:
-                self.red_ind = self.n - 2
+                self.red_ind = None
+                self.finished()
                 self.green_ind = self.n - 1
                 return
             j -= 1
 
     def selection_sort(self):
+        self.init_textbox("Selection")
         for i in range(self.n - 1):
             self.red_ind = None
             for j in range(i, self.n):
@@ -68,8 +94,11 @@ class SortingVisualizer:
                 self.green_ind = j
                 self.wait()
             self.swap(self.red_ind, i)
+        self.red_ind = None
+        self.finished()
 
     def insertion_sort(self):
+        self.init_textbox("Insertion")
         for i in range(self.n):
             self.green_ind = i + 1
             for j in range(i - 1, -1, -1):
@@ -81,7 +110,8 @@ class SortingVisualizer:
                 else:
                     break
                 self.wait()
-        self.red_ind = self.n - 2
+        self.red_ind = None
+        self.finished()
         self.green_ind = self.n - 1
 
     def overwrite_range(self, left_point, right_point, array):
@@ -91,9 +121,10 @@ class SortingVisualizer:
             self.wait()
 
     def merge_sort(self):
+        self.init_textbox("Merge")
         self.merge_sort_rec(0, self.n)
         self.green_ind = self.n - 1
-        self.red_ind = self.n - 2
+        self.finished()
 
     def merge_sort_rec(self, left, right):  # Stop before right
         l = right - left
@@ -127,8 +158,10 @@ class SortingVisualizer:
                 self.wait()
 
     def quick_sort(self):
+        self.init_textbox("Quick")
         self.quick_sort_rec(0, self.n)
-        self.red_ind = self.n - 2
+        self.red_ind = None
+        self.finished()
         self.green_ind = self.n - 1
 
     def quick_sort_rec(self, left, right):
@@ -163,13 +196,16 @@ class SortingVisualizer:
         return num // (10 ** pos_from_right_0_indexed) % 10
 
     def radix_sort(self):
+        self.init_textbox("Radix")
         digits_required = len(str(self.maximum))
         for digit_pos in range(digits_required):
             self.overwrite_range(0, self.n, self.counting_sort_internal(self.arr, digit_pos))
         self.green_ind = self.n - 1
-        self.red_ind = self.n - 2
+        self.red_ind = None
+        self.finished()
 
     def counting_sort(self):
+        self.init_textbox("Counting")
         freqs = [0 for _ in range(self.maximum + 1)]
         for i in range(self.n):
             freqs[self.arr[i]] += 1
@@ -189,7 +225,8 @@ class SortingVisualizer:
             self.green_ind = i
             self.wait()
         self.overwrite_range(0, self.n, result)
-        self.red_ind = self.n - 2
+        self.red_ind = None
+        self.finished()
 
     def counting_sort_internal(self, array, digit_to_use):
         leny = len(array)
@@ -213,26 +250,20 @@ class SortingVisualizer:
         return result
 
     def heap_sort(self):
-        # self.overwrite_range(0, self.n, heapq._heapify_max(self.arr))
-        # for i in range(self.n - 1, -1, -1):
-        #     self.arr[i] = heapq._heappop_max(self.arr[:i+1])
-        #     self.overwrite_range(0, i, heapq._heapify_max(self.arr[:i]))
-        # Doesn't work
+        self.init_textbox("Heap")
         heapq.heapify(self.arr)
         for i in range(self.n):
             self.wait()
-
+        log_n = math.ceil(math.log2(self.n))
         result = []
         for i in range(self.n):
             result.append(heapq.heappop(self.arr))
-            self.arr.append(50)
             heapq.heapify(self.arr)
             self.green_ind = i
-            self.wait()
-        print(result)
+            for _ in range(log_n):
+                self.wait()
+        self.arr = [0 for _ in range(self.n)]
         self.overwrite_range(0, self.n, result)
         self.green_ind = self.n - 1
-        self.red_ind = self.n - 2
-
-    # def bogo_sort(self):
-    #     pass
+        self.red_ind = None
+        self.finished()
