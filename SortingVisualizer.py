@@ -1,6 +1,7 @@
 import random
 import time
 import pygame
+import heapq
 
 class SortingVisualizer:
     def __init__(self, surf, origin_x, origin_y, width, height, array, maximum, number_of_items, delay=0.02):
@@ -212,7 +213,26 @@ class SortingVisualizer:
         return result
 
     def heap_sort(self):
-        pass
+        # self.overwrite_range(0, self.n, heapq._heapify_max(self.arr))
+        # for i in range(self.n - 1, -1, -1):
+        #     self.arr[i] = heapq._heappop_max(self.arr[:i+1])
+        #     self.overwrite_range(0, i, heapq._heapify_max(self.arr[:i]))
+        # Doesn't work
+        heapq.heapify(self.arr)
+        for i in range(self.n):
+            self.wait()
+
+        result = []
+        for i in range(self.n):
+            result.append(heapq.heappop(self.arr))
+            self.arr.append(50)
+            heapq.heapify(self.arr)
+            self.green_ind = i
+            self.wait()
+        print(result)
+        self.overwrite_range(0, self.n, result)
+        self.green_ind = self.n - 1
+        self.red_ind = self.n - 2
 
     # def bogo_sort(self):
     #     pass
