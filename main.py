@@ -60,6 +60,8 @@ threads.append(Thread(target=graphs[5].radix_sort))
 threads.append(Thread(target=graphs[6].counting_sort))
 threads.append(Thread(target=graphs[7].heap_sort))
 
+print("Please press Enter to begin!")
+
 conti = True
 while conti:
     for event in pygame.event.get():
