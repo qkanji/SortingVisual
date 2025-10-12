@@ -1,7 +1,7 @@
 This is an animation that I made to compare 8 frequently used sorting algorithms.
 <br>**To begin the animation, please press _Enter_ on your keyboard.**
 <br>
-The algorithms included are:
+The animation features implementations of:
 1. Bubble sort
 2. Selection sort
 3. Insertion sort
