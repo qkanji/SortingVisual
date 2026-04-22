@@ -47,9 +47,6 @@ for j in range(number_of_items):
     for i in range(1, graphs_high * graphs_wide):
         graphs[i].arr[j] = graphs[0].arr[j]
 
-for i in range(graphs_high * graphs_wide):
-    graphs[i].display()
-
 threads = []
 threads.append(Thread(target=graphs[0].bubble_sort))
 threads.append(Thread(target=graphs[1].selection_sort))
@@ -62,6 +59,16 @@ threads.append(Thread(target=graphs[7].heap_sort))
 
 print("Please press Enter to begin!")
 
+start_font = pygame.sysfont.Font(size=48)
+start_text = start_font.render("Press Enter to start", True, (255, 255, 255))
+start_text_rect = start_text.get_rect(center=(screen_w // 2, screen_h // 2))
+
+surf.fill((0, 0, 0))
+surf.blit(start_text, start_text_rect)
+pygame.display.flip()
+
+import sys
+
 conti = True
 while conti:
     for event in pygame.event.get():
@@ -69,25 +76,27 @@ while conti:
             if event.key == pygame.K_RETURN:
                 conti = False
                 break
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+            
+# Clear the start text
+surf.fill((0, 0, 0))
+pygame.display.flip()
 
 for thread in threads:
+    thread.daemon = True
     thread.start()
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            for graph in graphs:
-                graph.kill_process()
-            for thread in threads:
-                thread.join(3)
-            quit()
+            pygame.quit()
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
-                for graph in graphs:
-                    graph.kill_process()
-                for thread in threads:
-                    thread.join(3)
-                quit()
+                pygame.quit()
+                sys.exit()
 
     pygame.draw.rect(surf, (0,0,0), (0, 0, 1000, 500))  # Draw background
     surf.blit(text, text_rect)
