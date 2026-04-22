@@ -4,7 +4,8 @@
 
 A multi-threaded graphical visualizer comparing eight different sorting algorithms running concurrently.
 
-[Insert Demo GIF / Screenshot Here]
+https://github.com/user-attachments/assets/a76bae2e-eb5e-40ca-88d5-33eec9877c30
+
 
 ## Features & Architecture
 
