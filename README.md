@@ -1,6 +1,6 @@
 # Sorting Algorithm Visualizer
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![Pygame](https://img.shields.io/badge/Pygame-4BB83B?style=for-the-badge)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Pygame](https://img.shields.io/badge/Pygame-4BB83B?style=for-the-badge)
 
 A multi-threaded graphical visualizer comparing eight different sorting algorithms running concurrently.
 
